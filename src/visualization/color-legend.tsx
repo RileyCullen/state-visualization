@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useRef, useEffect } from "react"
 import * as d3 from "d3"
+import { stateCodeToName } from "./state-cartogram-data"
 
 // Function to create a vertical color gradient canvas
 function verticalRamp(color, n = 256) {
@@ -55,6 +56,7 @@ export function VerticalColorLegend({
     onLabelChange,
     useLogScale = false,
     logBase = 10,
+    labelOffsetStep = 15
 }) {
     const containerRef = useRef(null)
     const svgRef = useRef(null)
@@ -244,7 +246,7 @@ export function VerticalColorLegend({
                         setEditValue(text.text())
                     }
                 })
-        })
+        });
 
         setLabelPositions(positions)
     }, [
@@ -311,34 +313,12 @@ export function VerticalColorLegend({
     )
 }
 
-// Example usage component with logarithmic scale
 export default function ColorLegendDemo(props: { data: any }) {
     const { data } = props;
-    // Using values that span multiple orders of magnitude for log scale
-    const tickValues = Array.from(data.values()).flat();
 
-    // Custom labels for the ticks that don't affect positioning
-    const [tickLabels, setTickLabels] = useState(tickValues)
-
-    const handleLabelChange = (tickValue, newLabel) => {
-        setTickLabels((prev) => {
-            const index = tickValues.indexOf(tickValue)
-            if (index !== -1) {
-                const newLabels = [...prev]
-                newLabels[index] = newLabel
-                return newLabels
-            }
-            return prev
-        })
-    }
-
-    const color = d3.scaleSequential(
-        // @ts-ignore
-        d3.extent(Array.from(data.values()).flat()),
-        d3.interpolateReds
-        // @ts-ignore
-    ).nice();
-
+    const ticks = createTicks();
+    const tickValues = Array.from(ticks.keys());
+    const tickLabels = Array.from(ticks.values());
 
     return (
         <div className="flex flex-col items-center p-4">
@@ -348,11 +328,30 @@ export default function ColorLegendDemo(props: { data: any }) {
                     title=""
                     tickValues={tickValues}
                     tickLabels={tickLabels}
-                    onLabelChange={handleLabelChange}
                     useLogScale={true}
                     logBase={10}
                 />
             </div>
         </div>
     )
+
+    function createTicks() {
+        const tickKeys = Array.from(data.keys());
+        const tickValues = Array.from(data.values());
+
+        const uniqueTicks = new Map();
+        tickValues.forEach((value, index) => {
+            const id = tickKeys[index];
+            const state = stateCodeToName[id].replace('_', ' ');
+            console.log(state)
+            if (uniqueTicks.has(value)) {
+                const prevLabel = uniqueTicks.get(value);
+                uniqueTicks.set(value, prevLabel + `, ${state}`);
+            } else {
+                uniqueTicks.set(value, `${value} - ${state}`);
+            }
+        });
+        return uniqueTicks;
+    }
 }
+

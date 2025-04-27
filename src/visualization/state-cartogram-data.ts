@@ -33,29 +33,43 @@ export enum CartogramStateId {
     Montana = '30',
     Nebraska = '31',
     Nevada = '32',
-    NewHampshire = '33',
-    NewJersey = '34',
-    NewMexico = '35',
-    NewYork = '36',
-    NorthCarolina = '37',
-    NorthDakota = '38',
+    New_Hampshire = '33',
+    New_Jersey = '34',
+    New_Mexico = '35',
+    New_York = '36',
+    North_Carolina = '37',
+    North_Dakota = '38',
     Ohio = '39',
     Oklahoma = '40',
     Oregon = '41',
     Pennsylvania = '42',
-    RhodeIsland = '44',
-    SouthCarolina = '45',
-    SouthDakota = '46',
+    Rhode_Island = '44',
+    South_Carolina = '45',
+    South_Dakota = '46',
     Tennessee = '47',
     Texas = '48',
     Utah = '49',
     Vermont = '50',
     Virginia = '51',
     Washington = '53',
-    WestVirginia = '54',
+    West_Virginia = '54',
     Wisconsin = '55',
     Wyoming = '56'
 }
+
+// Type for the reverse mapping (code to state name)
+export type StateCodeToName = {
+    [code: string]: keyof typeof CartogramStateId
+}
+
+// Create the reverse mapping
+export const stateCodeToName: StateCodeToName = Object.entries(CartogramStateId).reduce(
+    (acc, [stateName, stateCode]) => {
+        acc[stateCode] = stateName as keyof typeof CartogramStateId
+        return acc
+    },
+    {} as StateCodeToName,
+)
 
 export const MockDataset: StateCartogramData[] = [
     [CartogramStateId.Alabama, 7],
@@ -75,16 +89,16 @@ export const MockDataset: StateCartogramData[] = [
     [CartogramStateId.Mississippi, 5],
     [CartogramStateId.Missouri, 22],
     [CartogramStateId.Nevada, 2],
-    [CartogramStateId.NewMexico, 58],
-    [CartogramStateId.NorthCarolina, 5],
+    [CartogramStateId.New_Mexico, 58],
     [CartogramStateId.Ohio, 4],
     [CartogramStateId.Oklahoma, 14],
     [CartogramStateId.Pennsylvania, 1],
-    [CartogramStateId.SouthCarolina, 1],
+    [CartogramStateId.South_Carolina, 1],
     [CartogramStateId.Tennessee, 19],
     [CartogramStateId.Texas, 6633],
     [CartogramStateId.Utah, 2],
     [CartogramStateId.Virginia, 28],
-    [CartogramStateId.WestVirginia, 11]
+    [CartogramStateId.West_Virginia, 11],
+    [CartogramStateId.North_Carolina, 5]
 ];
 

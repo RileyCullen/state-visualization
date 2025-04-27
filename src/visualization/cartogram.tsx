@@ -23,7 +23,7 @@ export function Cartogram() {
                 <h1
                     style={{ textAlign: 'center' }}
                 >
-                    Triatomine Bug Distribution on a Logarithmic scale
+                    Triatomine Bug Distribution on a Logarithmic scale since 2012
                 </h1>
                 <h4 style={{ textAlign: 'center' }}>
                     By Khoa Vu and Jade Zdeblick
