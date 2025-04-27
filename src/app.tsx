@@ -1,8 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Cartogram } from './visualization/cartogram';
 
 function App() {
-    return <p>App!</p>;
+    return (
+        <Cartogram />
+    );
 }
 
 createRoot(document.getElementById('root')!).render(
