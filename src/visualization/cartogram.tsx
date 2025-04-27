@@ -2,23 +2,41 @@ import * as d3 from 'd3';
 import * as topojson from 'topojson';
 import { RefObject, useEffect, useRef } from 'react';
 import { CartogramStateId, MockDataset, StateCartogramData } from './state-cartogram-data';
+// @ts-ignore
+import { legend } from './legend';
 
 import us from './states-albers-10m.json';
+import ColorLegend from './color-legend';
 
 const WIDTH = 975;
 const HEIGHT = 610;
 
 export function Cartogram() {
-    const svgRef = useRef(null);
+    const cartogramRef = useRef(null);
 
     const data = new Map(process(MockDataset));
-    useCartogram(svgRef, data);
+    useCartogram(cartogramRef, data);
 
     return (
-        <svg
-            ref={svgRef}
-        >
-        </svg>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <div>
+                <h1
+                    style={{ textAlign: 'center' }}
+                >
+                    Triatomine Bug Distribution on a Logarithmic scale
+                </h1>
+                <h4 style={{ textAlign: 'center' }}>
+                    By Khoa Vu and Jade Zdeblick
+                </h4>
+                <svg
+                    ref={cartogramRef}
+                >
+                </svg>
+            </div>
+            <ColorLegend
+                data={new Map(MockDataset)}
+            />
+        </div >
     )
 }
 
@@ -38,6 +56,8 @@ function useCartogram(
                 .attr('style', 'max-width: 100%; height: auto');
 
             const path = d3.geoPath();
+
+            // Outline of map
             svg.append('path')
                 // @ts-ignore
                 .datum(topojson.mesh(us, us.objects.states))
@@ -50,7 +70,9 @@ function useCartogram(
                 d3.extent(Array.from(data.values()).flat()),
                 d3.interpolateReds
                 // @ts-ignore
-            ).nice();
+            );
+
+            // Actual state colorings
             svg.append('g')
                 .attr('stroke', '#000')
                 .selectAll('path')
@@ -78,14 +100,13 @@ function useCartogram(
         const [x, y] = path.centroid(d);
         return `
             translate(${x},${y})
-            scale(${data.get(d.id)})
             translate(${-x},${-y})
         `;
     }
 }
 
 function process(data: StateCartogramData[]): StateCartogramData[] {
-    const log = d3.scaleLog([1, 6633], [0, 1]);
+    const log = d3.scaleLog([0.5, 6633], [0, 6633]);
     return data.map((dataPoint) => [dataPoint[0], log(dataPoint[1])]);
 }
 
