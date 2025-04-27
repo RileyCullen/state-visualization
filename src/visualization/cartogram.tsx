@@ -1,12 +1,10 @@
-import * as d3 from 'd3';
-import * as topojson from 'topojson';
-import { RefObject, useEffect, useRef } from 'react';
+import ColorLegend from './color-legend';
 import { CartogramStateId, MockDataset, StateCartogramData } from './state-cartogram-data';
-// @ts-ignore
-import { legend } from './legend';
+import * as d3 from 'd3';
+import { RefObject, useEffect, useRef } from 'react';
+import * as topojson from 'topojson';
 
 import us from './states-albers-10m.json';
-import ColorLegend from './color-legend';
 
 const WIDTH = 975;
 const HEIGHT = 610;
